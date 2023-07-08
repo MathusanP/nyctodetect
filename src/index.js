@@ -2,16 +2,16 @@ const tf = require('@tensorflow/tfjs-node');
 const { createCanvas, loadImage } = require('canvas');
 const sharp = require('sharp');
 const axios = require('axios');
+const path = require('path');
 
-const imageUrl = 'https://i.ytimg.com/vi/QggJzZdIYPI/mqdefault.jpg';
-const modelPath = 'file://C:/Mathusan/code/Nyctodetect/models/model.json';
+const modelPath = path.resolve(__dirname, 'models', 'model.json');
 
 async function processImageFromURL(imageUrl) {
   try {
     const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
     const imageBuffer = response.data;
     const image = await sharp(imageBuffer)
-      .resize(224, 224, 3)
+      .resize(224, 224)
       .toBuffer();
 
     // Rest of the image processing logic...
@@ -25,7 +25,7 @@ async function processImageFromURL(imageUrl) {
 
 async function loadModel(modelPath) {
   try {
-    const model = await tf.loadLayersModel(modelPath);
+    const model = await tf.loadLayersModel(`file://${modelPath}`);
     return model;
   } catch (error) {
     console.error('Error loading model:', error);
@@ -33,7 +33,7 @@ async function loadModel(modelPath) {
   }
 }
 
-async function run() {
+async function run(imageUrl) {
   try {
     // Load the model
     const model = await loadModel(modelPath);
@@ -64,9 +64,10 @@ async function run() {
     const predictionData = predictions.arraySync()[0];
     const [class1Percentage, class2Percentage] = predictionData;
 
-    // Print the percentages
-    console.log('Class 1 Percentage:', class1Percentage);
-    console.log('Class 2 Percentage:', class2Percentage);
+    const dark = Number((class1Percentage * 100).toPrecision(3));
+    const light = Number((class2Percentage * 100).toPrecision(3));
+
+    console.log(`Your image contains ${dark}% dark content and ${light}% light content.`);
 
     // Cleanup
     tf.dispose([model, processedImageTensor, reshapedImageTensor]);
@@ -75,4 +76,8 @@ async function run() {
   }
 }
 
-run();
+async function nyctodetect(imageUrl) {
+  run(imageUrl);
+}
+
+module.exports = nyctodetect;
