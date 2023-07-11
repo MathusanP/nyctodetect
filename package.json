@@ -5,5 +5,30 @@
     "axios": "^1.4.0",
     "canvas": "^2.11.2",
     "sharp": "^0.32.1"
-  }
+  },
+  "name": "nyctodetect",
+  "version": "1.0.1",
+  "description": "An Ai image brightness detection tool",
+  "main": "src/index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "node src/."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bagelwastaken/nyctodetect.git"
+  },
+  "keywords": [
+    "Tensorflow",
+    "TeachableMachine",
+    "AI",
+    "Dark",
+    "Light"
+  ],
+  "author": "Mathusan Paramanithy",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/bagelwastaken/nyctodetect/issues"
+  },
+  "homepage": "https://github.com/bagelwastaken/nyctodetect#readme"
 }
